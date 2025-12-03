@@ -1,3 +1,4 @@
+# Promart AI - Versión Optimizada v1.1
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
