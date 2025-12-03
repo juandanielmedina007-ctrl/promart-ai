@@ -16,7 +16,18 @@ def search_promart(query):
     print(f"🔎 Buscando en Promart: {query}")
     
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        # Optimización para Render: usar menos memoria
+        browser = p.chromium.launch(
+            headless=True,
+            args=[
+                '--disable-dev-shm-usage',  # Evita problemas de memoria compartida
+                '--no-sandbox',              # Necesario para contenedores
+                '--disable-setuid-sandbox',
+                '--disable-gpu',             # No necesitamos GPU
+                '--disable-software-rasterizer',
+                '--single-process'           # Usa un solo proceso (menos memoria)
+            ]
+        )
         context = browser.new_context(
             user_agent=random.choice(USER_AGENTS),
             viewport={'width': 1920, 'height': 1080}
