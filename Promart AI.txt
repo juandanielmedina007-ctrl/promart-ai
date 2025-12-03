@@ -1,0 +1,71 @@
+Promart AI
+1. 🎯 Misión del Sistema (El Objetivo Final)
+El objetivo es crear un Asistente de Compra Experto que analice el input de lenguaje natural del usuario y lo cruce con datos dinámicos extraídos de Promart Homecenter para entregar una única recomendación de producto altamente fundamentada y precisa.
+
+2. ⚙️ Reglas de Arquitectura y Tecnología
+El sistema debe operar siguiendo estas dependencias obligatorias:
+
+2.1 Módulo de Adquisición de Datos (El Scraper)
+Herramienta de Ejecución: Debe simular un navegador real (Python + Playwright/Selenium).
+
+Comportamiento de Búsqueda: El módulo debe tomar el texto de la solicitud del usuario y transformarlo en una URL de búsqueda válida para Promart (ej: /search?q=...).
+
+Manejo de Dinamismo: Debe esperar a que el contenido cargado por JavaScript (títulos, precios) sea visible antes de intentar la extracción.
+
+Anti-Bloqueo: Debe implementar pausas aleatorias y rotación de User Agents para mitigar bloqueos de Promart.
+
+Alcance: Recolectar datos solo de los primeros 20 resultados para optimizar la velocidad y la ventana de contexto de la IA.
+
+2.2 Formato de Datos (JSON Estricto)
+El output del scraper debe ser un array de objetos JSON limpios y estructurados.
+
+Campos Obligatorios:
+
+id (SKU o ID único)
+
+nombre (Título completo del producto)
+
+precio_actual (Solo valor numérico)
+
+link_producto (URL completa del producto)
+
+detalles_clave (Texto conciso de especificaciones técnicas o ventajas)
+
+2.3 Módulo de Inteligencia (El Motor Gemini)
+Motor Base: Google Gemini 1.5 Flash (elegido por su gran ventana de contexto y eficiencia de costos).
+
+Función: La única función del módulo es analizar y razonar, utilizando únicamente el JSON de contexto proporcionado por el scraper.
+
+3. 📝 Protocolo de Operación (El Flujo)
+Cada interacción con el usuario debe seguir este ciclo estricto:
+
+Recepción: El sistema recibe la solicitud del usuario (ej: "taladro para principiantes, max S/150").
+
+Traducción a Query: El sistema extrae los términos de búsqueda más relevantes (ej: "taladro principiantes").
+
+Extracción (Scraping): El Módulo de Adquisición se ejecuta con la query, navega a Promart, y devuelve el JSON de los productos relevantes (Máx 20).
+
+Inyección de Contexto: El JSON de productos y la solicitud original del usuario se inyectan en el prompt del Motor Gemini.
+
+Análisis y Decisión: El Motor Gemini aplica su rol experto para comparar los productos en el JSON y selecciona el mejor candidato.
+
+Entrega: El sistema frontend presenta la respuesta de la IA en el formato final definido.
+
+4. 🧠 Comportamiento y Rol del Motor Gemini
+4.1. Rol de Sistema (System Prompt Interno)
+Eres un Especialista Imparcial y Riguroso en productos de ferretería y hogar de la tienda Promart. Tu conocimiento se limita estrictamente a la lista JSON de productos que te proporciono. Tu misión es tomar la mejor decisión de compra para el usuario, priorizando primero la función (¿sirve para lo que necesita?) y luego el presupuesto.
+
+4.2. Reglas de Razonamiento
+No Alucinación: Nunca inventes precios, nombres o enlaces. Si la información no está en el JSON, no existe.
+
+Justificación Transparente: La recomendación debe explicar explícitamente qué campos del JSON (precio, detalles) influyeron en la decisión.
+
+Manejo de Limitaciones: Si el JSON no tiene un producto adecuado (ej: el usuario pide algo profesional, pero solo hay opciones domésticas), debes comunicarlo claramente antes de dar la mejor opción disponible.
+
+5. 🖥️ Formato de Salida Final (Frontend)
+La respuesta final que se muestra al usuario debe ser estructurada para máxima claridad y confianza.
+Elemento	Requerimiento
+Título	La mejor opción para ti es: [Nombre del Producto]
+Puntuación	[Una valoración de 1 a 5 estrellas basada en la adecuación a la necesidad, no en las reseñas de Promart]
+Análisis	Una explicación de 2-3 párrafos detallando el por qué es la mejor opción.
+Precio y Enlace	Presentación clara del precio actual y un botón de enlace directo al producto en Promart.

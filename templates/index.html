@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promart AI - Asistente de Compra</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Promart <span class="highlight">AI</span></div>
+            <p class="subtitle">Tu experto personal en compras de hogar y ferretería.</p>
+        </header>
+
+        <main>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="¿Qué necesitas hoy? (ej: taladro percutor barato)">
+                <button id="searchBtn">
+                    <span class="btn-text">Analizar</span>
+                    <div class="loader hidden"></div>
+                </button>
+            </div>
+
+            <!-- Mensajes de Carga -->
+            <div id="loadingMessages" class="loading-messages hidden">
+                <h3 id="loadingTitle">🔍 Buscando las mejores opciones...</h3>
+                <p id="loadingSubtitle">Analizando productos en Promart</p>
+            </div>
+
+            <!-- Contenedor de Clarificación -->
+            <div id="clarificationContainer" class="clarification-container hidden">
+                <h3>Necesito un poco más de detalle...</h3>
+                <div id="questionsList"></div>
+                <button id="sendAnswersBtn">Continuar</button>
+            </div>
+
+            <!-- Contenedor de Resultados -->
+            <div id="resultContainer" class="result-container hidden">
+                <h2 id="recTitle" class="main-title">Título de la recomendación</h2>
+                <p id="recAnalysis" class="main-analysis">Análisis general...</p>
+
+                <div id="cardsGrid" class="cards-grid">
+                    <!-- Las tarjetas se inyectarán aquí -->
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

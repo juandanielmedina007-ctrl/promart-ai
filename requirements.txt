@@ -1,0 +1,6 @@
+flask
+playwright
+google-generativeai
+python-dotenv
+beautifulsoup4
+gunicorn
