@@ -24,33 +24,14 @@ def search_promart(query):
         page = context.new_page()
         
         try:
-            # 1. Ir a la home
-            print("🏠 Navegando a Promart.pe...")
-            page.goto("https://www.promart.pe/", timeout=60000)
+            # Optimización: Ir directamente a la URL de búsqueda (más rápido y confiable)
+            print(f"🔍 Buscando directamente: {query}")
+            search_url = f"https://www.promart.pe/busca?ft={query}"
+            page.goto(search_url, timeout=30000, wait_until="domcontentloaded")
             
-            # 2. Buscar en la barra
-            # Intentamos selectores comunes de barra de búsqueda
-            search_input = page.get_by_placeholder("¿Qué estás buscando?", exact=False)
-            if not search_input.is_visible():
-                 search_input = page.locator("input[type='search']").first
-            
-            if search_input.is_visible():
-                print(f"⌨️ Escribiendo búsqueda: {query}")
-                search_input.fill(query)
-                search_input.press("Enter")
-            else:
-                print("⚠️ No se encontró barra de búsqueda, intentando URL directa...")
-                # Usamos /busca?ft= que redirige correctamente, a diferencia de /search?q=
-                page.goto(f"https://www.promart.pe/busca?ft={query}", timeout=60000)
-
-            # 3. Esperar resultados
+            # Espera reducida para renderizado de JS
             print("⏳ Esperando resultados...")
-            try:
-                # Usamos domcontentloaded que es más rápido y menos propenso a fallar por analytics
-                page.wait_for_load_state("domcontentloaded", timeout=15000)
-                time.sleep(5) # Espera para renderizado de JS (productos)
-            except Exception as e:
-                print(f"⚠️ Timeout esperando carga completa, intentando parsear de todos modos: {e}")
+            time.sleep(3)  # Reducido de 5 a 3 segundos
             
             # 4. Parsear con BeautifulSoup
             from bs4 import BeautifulSoup
