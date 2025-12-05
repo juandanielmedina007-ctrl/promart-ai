@@ -1,4 +1,4 @@
-# Despliegue en Render.com (GRATIS, sin tarjeta)
+# Despliegue en Render.com (GRATIS, sin tarjeta) - Actualizado Dic 2025
 
 ## Pasos para Desplegar
 
